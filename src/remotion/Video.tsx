@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Composition, continueRender, delayRender } from 'remotion'
-import { Intro } from './Intro'
+import { All } from './All'
 import { getAudioDurationInSeconds } from '@remotion/media-utils'
 import { Script } from 'src/main'
+import './style.css'
 
 export const RemotionVideo: React.FC = () => {
   const file = process.env.REMOTION_SCRIPT_FILE ?? 'test'
@@ -34,8 +35,8 @@ export const RemotionVideo: React.FC = () => {
   return (
     <>
       <Composition
-        id={`HelloWorld`}
-        component={() => <Intro duration={duration} script={script} file={file} />}
+        id={`All`}
+        component={() => <All duration={duration} script={script} file={file} />}
         durationInFrames={totalDutration}
         fps={fps}
         width={1920}

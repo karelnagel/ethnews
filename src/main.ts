@@ -7,11 +7,11 @@ import { writeJson } from './file/index.js'
 import { toSpeech } from './google/index.js'
 
 export interface Script {
-  type: 'introduction' | 'thread' | 'ad' | 'outro'
+  type: 'intro' | 'thread' | 'ad' | 'outro'
   text: string
   position: number
   content: {
-    type: 'thread' | 'introduction' | 'url' | 'outro'
+    type: 'thread' | 'intro' | 'url' | 'outro'
     data: string | Tweet[] | null
   }
 }
@@ -39,11 +39,11 @@ export default async function main() {
 
   const script: Script[] = []
   script.push({
-    type: 'introduction',
+    type: 'intro',
     text: intro,
     position: 0,
     content: {
-      type: 'introduction',
+      type: 'intro',
       data: null,
     },
   })
