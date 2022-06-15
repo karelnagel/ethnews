@@ -20,7 +20,7 @@ export async function introduction(content: string[]): Promise<string> {
   const introduction = await gpt3(
     `${content.join(
       '\n',
-    )} \n\n You are the news reporter and have to write greeting and introduction for EthNews and the previous content. Today is ${new Date().toUTCString()}`,
+    )} \n\n You are the news reporter and have to write short greeting and introduction for EthNews and the previous content. Today is ${new Date().toUTCString()}`,
   )
   return introduction ?? ''
 }
@@ -29,7 +29,7 @@ export async function outro(intro: string, content: string[]): Promise<string> {
   const introduction = await gpt3(
     `${intro} ${content.join(
       '\n',
-    )} \n\n You are the news reporter and have to write outro for EthNews and based on previous content.`,
+    )} \n\n You are the news reporter and have to write short outro for EthNews and based on previous content.`,
   )
   return introduction ?? ''
 }
@@ -41,10 +41,11 @@ export async function gpt3(
   top_p = 1,
   frequency_penalty = 0,
   presence_penalty = 0,
+  model: 'text-ada-001' | 'text-davinci-002' = 'text-ada-001',
 ) {
   try {
     const response = await openai.createCompletion({
-      model: 'text-ada-001', //"text-davinci-002",
+      model,
       prompt,
       temperature,
       max_tokens,

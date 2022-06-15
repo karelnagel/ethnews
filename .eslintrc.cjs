@@ -12,7 +12,5 @@ module.exports = {
     '@typescript-eslint/no-dupe-class-members': ['error'],
     '@typescript-eslint/no-useless-constructor': ['error'],
     '@typescript-eslint/no-inferrable-types': ['off'],
-
-    'import/extensions': ['error', 'ignorePackages', { js: 'always', jsx: 'never', ts: 'never', tsx: 'never' }],
   },
 }

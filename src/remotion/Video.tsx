@@ -1,39 +1,46 @@
-import React from 'react'
-import { Composition } from 'remotion'
-import { HelloWorld } from './HelloWorld'
-import { Logo } from './HelloWorld/Logo'
-import { Subtitle } from './HelloWorld/Subtitle'
-import { Title } from './HelloWorld/Title'
+import React, { useEffect, useState } from 'react'
+import { Composition, continueRender, delayRender } from 'remotion'
+import { Intro } from './Intro'
+import { getAudioDurationInSeconds } from '@remotion/media-utils'
+import { Script } from 'src/main'
 
 export const RemotionVideo: React.FC = () => {
+  const file = process.env.REMOTION_SCRIPT_FILE ?? 'test'
+  const fps = 30
+  const [handle] = useState(() => delayRender())
+  const [duration, setDuration] = useState<number[]>([])
+  const [script, setScript] = useState<Script[]>()
+  const [totalDutration, setTotalDuration] = useState(1)
+
+  useEffect(() => {
+    const effect = async () => {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const scr = require(`./videos/${file}/script.json`)
+      setScript(scr)
+
+      const durs: number[] = []
+      for await (const s of scr) {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const dur = await getAudioDurationInSeconds(require(`./videos/${file}/${s.position}.mp3`))
+        durs.push(Number((dur * fps).toFixed(0)))
+      }
+      setDuration(durs)
+      setTotalDuration(durs.reduce((a, b) => a + b, 0))
+      continueRender(handle)
+    }
+    effect()
+  }, [handle])
+  console.log(duration.reduce((a, b) => a + b, 0))
   return (
     <>
       <Composition
-        id="HelloWorld"
-        component={HelloWorld}
-        durationInFrames={150}
-        fps={30}
+        id={`HelloWorld`}
+        component={() => <Intro duration={duration} script={script} file={file} />}
+        durationInFrames={totalDutration}
+        fps={fps}
         width={1920}
         height={1080}
-        defaultProps={{
-          titleText: 'Welcome to Remotion',
-          titleColor: 'black',
-        }}
       />
-      <Composition id="Logo" component={Logo} durationInFrames={200} fps={30} width={1920} height={1080} />
-      <Composition
-        id="Title"
-        component={Title}
-        durationInFrames={100}
-        fps={30}
-        width={1920}
-        height={1080}
-        defaultProps={{
-          titleText: 'Welcome to Remotion',
-          titleColor: 'black',
-        }}
-      />
-      <Composition id="Subtitle" component={Subtitle} durationInFrames={100} fps={30} width={1920} height={1080} />
     </>
   )
 }
