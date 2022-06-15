@@ -2,8 +2,7 @@
 import 'dotenv/config'
 import { introduction, outro, summarizeThread } from './openai/index.js'
 import { getThreads, Tweet } from './twitter/index.js'
-import {} from 'remotion'
-import { start } from './remotion/render.js'
+import { start } from './render.js'
 import { writeJson } from './file/index.js'
 
 export interface Script {
@@ -15,7 +14,8 @@ export interface Script {
   }
 }
 export default async function main() {
-  const folderPath = `videos/${new Date().toISOString()}`
+  const folder = new Date().toISOString()
+  const folderPath = `src/remotion/videos/${folder}`
   const yesterday = new Date()
   yesterday.setDate(yesterday.getDate() - 1)
 
@@ -71,13 +71,11 @@ export default async function main() {
       data: null,
     },
   })
-
   const scriptPath = await writeJson(script, folderPath)
   console.log(`Script written to ${scriptPath}`)
-
   // Creating video with remotion
   // const scriptPath = `videos/2022-06-15/script.json`
-  const videoPath = await start(scriptPath, folderPath)
+  const videoPath = await start(`videos/${folder}/script.json`, folderPath)
   console.log(`Video created: ${videoPath}`)
 }
 main()
