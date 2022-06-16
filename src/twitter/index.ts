@@ -9,6 +9,7 @@ export interface Tweet {
   name: string
   username: string
   description: string
+  image: string
 }
 
 export const getThreads = async (query: string, count: number, start_time: string): Promise<Tweet[][] | null> => {
@@ -20,7 +21,7 @@ export const getThreads = async (query: string, count: number, start_time: strin
       start_time,
       'tweet.fields': ['public_metrics', 'referenced_tweets'],
       expansions: ['author_id'],
-      'user.fields': ['name', 'username', 'description'],
+      'user.fields': ['name', 'username', 'description', 'profile_image_url'],
       max_results: 100,
     })
 
@@ -34,6 +35,7 @@ export const getThreads = async (query: string, count: number, start_time: strin
           name: page.includes?.users?.find(u => u.id === t.author_id)?.name ?? '',
           username: page.includes?.users?.find(u => u.id === t.author_id)?.username ?? '',
           description: page.includes?.users?.find(u => u.id === t.author_id)?.description ?? '',
+          image: page.includes?.users?.find(u => u.id === t.author_id)?.profile_image_url ?? '',
         })) ?? []
       tweets.push(...pageTweets)
     }
@@ -49,7 +51,7 @@ export const getThreads = async (query: string, count: number, start_time: strin
         const result = await client.tweets.findTweetById(replyTo, {
           expansions: ['author_id'],
           'tweet.fields': ['public_metrics', 'referenced_tweets'],
-          'user.fields': ['id', 'name', 'description'],
+          'user.fields': ['id', 'name', 'description', 'username', 'profile_image_url'],
         })
         if (result.data) {
           const newTweet = {
@@ -62,6 +64,7 @@ export const getThreads = async (query: string, count: number, start_time: strin
             name: result.includes?.users?.find(u => u.id === result.data?.author_id)?.name ?? '',
             username: result.includes?.users?.find(u => u.id === result.data?.author_id)?.username ?? '',
             description: result.includes?.users?.find(u => u.id === result.data?.author_id)?.description ?? '',
+            image: result.includes?.users?.find(u => u.id === result.data?.author_id)?.profile_image_url ?? '',
           }
           thread.push(newTweet)
           replyTo = newTweet.replyTo

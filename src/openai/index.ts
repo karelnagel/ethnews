@@ -11,7 +11,7 @@ export async function summarizeThread(thread: Tweet[]): Promise<string> {
     .map(tweet => `${tweet.name} (${tweet.username}): ${tweet.text.replace('\n', ' ')}`)
     .join('\n')
   const summary = await gpt3(
-    `${formattedThread} \n\n You are the news reporter and you have to summarize the previous Twitter thread for EthNews video transcript. `,
+    `${formattedThread} \n\n You are the news reporter and you have to summarize the previous Twitter thread for EthNews video transcript.`,
   )
   return summary ?? ''
 }
@@ -20,7 +20,7 @@ export async function introduction(content: string[]): Promise<string> {
   const introduction = await gpt3(
     `${content.join(
       '\n',
-    )} \n\n You are the news reporter and have to write short greeting and introduction for EthNews and the previous content. Today is ${new Date().toUTCString()}`,
+    )} \n\n You are the news reporter and have to write short(10-20 words) greeting for EthNews(a news outlet for all things Ethereum) and the previous content. Today is ${new Date().toUTCString()}`,
   )
   return introduction ?? ''
 }
@@ -29,7 +29,7 @@ export async function outro(intro: string, content: string[]): Promise<string> {
   const introduction = await gpt3(
     `${intro} ${content.join(
       '\n',
-    )} \n\n You are the news reporter and have to write short outro for EthNews and based on previous content.`,
+    )} \n\n You are the news reporter and the previous content is your today's topic, you have to write a short ending to the story (10-20 words).`,
   )
   return introduction ?? ''
 }
@@ -41,7 +41,7 @@ export async function gpt3(
   top_p = 1,
   frequency_penalty = 0,
   presence_penalty = 0,
-  model: 'text-ada-001' | 'text-davinci-002' = 'text-ada-001',
+  model: 'text-ada-001' | 'text-davinci-002' = 'text-davinci-002',
 ) {
   try {
     const response = await openai.createCompletion({

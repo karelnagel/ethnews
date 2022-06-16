@@ -5,7 +5,7 @@ export const start = async (file: string, folder: string): Promise<string> => {
 
   return new Promise((resolve, reject) => {
     exec(
-      `REMOTION_SCRIPT_FILE=${file} npx remotion render src/remotion/index.tsx All ${filePath}`,
+      `REMOTION_SCRIPT_FILE=${file} npx remotion render src/remotion/index.tsx Root ${filePath}`,
       async function (err) {
         if (err) {
           reject(err)

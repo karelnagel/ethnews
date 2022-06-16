@@ -1,12 +1,9 @@
 /* eslint-env node */
+const colors = require('tailwindcss/colors')
 
 module.exports = {
   content: ['./src/**/*.{html,js}'],
   theme: {
-    colors: {
-      'primary': '#1fb6ff',
-      'secondary': '#ffc107',
-    },
     extend: {
       fontFamily: {
         sans: ['Graphik', 'sans-serif'],

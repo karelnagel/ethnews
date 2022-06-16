@@ -6,12 +6,12 @@ import { Intro } from './screens/Intro'
 import { Outro } from './screens/Outro'
 import { Thread } from './screens/Thread'
 import { Url } from './screens/Url'
+import { scriptFile } from './Video'
 
-export const All: React.FC<{
+export const Root: React.FC<{
   duration: number[]
   script?: Script[]
-  file: string
-}> = ({ duration, script, file }) => {
+}> = ({ duration, script }) => {
   return (
     <>
       {script &&
@@ -21,14 +21,12 @@ export const All: React.FC<{
             durationInFrames={duration[s.position]}
           >
             <AbsoluteFill className="bg-white ">
-              {s.content.type === 'thread' && (
-                <Thread thread={s.content.data as Tweet[]} duration={duration[s.position]} />
-              )}
-              {s.content.type === 'url' && <Url url={s.content.data as string} duration={duration[s.position]} />}
-              {s.content.type === 'intro' && <Intro duration={duration[s.position]} />}
-              {s.content.type === 'outro' && <Outro duration={duration[s.position]} />}
+              {s.content.type === 'thread' && <Thread thread={s.content.data as Tweet[]} />}
+              {s.content.type === 'url' && <Url url={s.content.data as string} />}
+              {s.content.type === 'intro' && <Intro />}
+              {s.content.type === 'outro' && <Outro />}
 
-              <Audio key={i} src={require(`./videos/${file}/${s.position}.mp3`)} endAt={duration[s.position]} />
+              <Audio key={i} src={require(`./videos/${scriptFile}/${s.position}.mp3`)} endAt={duration[s.position]} />
             </AbsoluteFill>
           </Sequence>
         ))}

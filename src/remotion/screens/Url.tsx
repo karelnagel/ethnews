@@ -1,12 +1,8 @@
 import React from 'react'
+import { AbsoluteFill } from 'remotion'
 
 export const Url: React.FC<{
-  duration: number
   url: string
-}> = ({ url }) => {
-  return (
-    <>
-      <p>{url}</p>
-    </>
-  )
+}> = ({}) => {
+  return <AbsoluteFill>url</AbsoluteFill>
 }

@@ -9,7 +9,7 @@
     "format": "prettier \"./**\" --write --ignore-unknown",
     "format:check": "prettier \"./**\" --ignore-unknown --check",
     "remotion:start": "remotion preview src/remotion/index.tsx",
-    "remotion:build": "remotion render src/remotion/index.tsx HelloWorld out/video.mp4",
+    "remotion:build": "remotion render src/remotion/index.tsx Root out/video.mp4",
     "remotion:upgrade": "remotion upgrade"
   },
   "dependencies": {

@@ -22,7 +22,7 @@ export default async function main() {
   yesterday.setDate(yesterday.getDate() - 1)
 
   // Getting threads from yesterday
-  const threads = await getThreads('#ethnews from:KarelETH', 2, yesterday.toISOString())
+  const threads = await getThreads('#ethnews from:KarelETH', 3, yesterday.toISOString())
   if (!threads) {
     console.log('No threads found')
     return
@@ -60,18 +60,9 @@ export default async function main() {
     })
   })
   script.push({
-    type: 'ad',
-    text: 'Support us on Patreon',
-    position: threads.length + 1,
-    content: {
-      type: 'url',
-      data: 'https://www.patreon.com/karel',
-    },
-  })
-  script.push({
     type: 'outro',
     text: out,
-    position: threads.length + 2,
+    position: threads.length + 1,
     content: {
       type: 'outro',
       data: null,
