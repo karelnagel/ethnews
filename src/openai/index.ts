@@ -6,21 +6,21 @@ const configuration = new Configuration({
 })
 const openai = new OpenAIApi(configuration)
 
+const context = 'You are the news reporter for EthNews, which is a news outlet for Ethereum news.'
 export async function summarizeThread(thread: Tweet[]): Promise<string> {
   const formattedThread = thread
     .map(tweet => `${tweet.name} (${tweet.username}): ${tweet.text.replace('\n', ' ')}`)
     .join('\n')
   const summary = await gpt3(
-    `${formattedThread} \n\n You are the news reporter and you have to summarize the previous Twitter thread for EthNews video transcript.`,
+    `${formattedThread} \n\n ${context} You have to summarize the previous Twitter thread for a video transcript.`,
   )
   return summary ?? ''
 }
 
 export async function introduction(content: string[]): Promise<string> {
   const introduction = await gpt3(
-    `${content.join(
-      '\n',
-    )} \n\n You are the news reporter and have to write short(10-20 words) greeting for EthNews(a news outlet for all things Ethereum) and the previous content. Today is ${new Date().toUTCString()}`,
+    `${content.join('\n')}
+    \n\n ${context} You have to write short(10-20 words) greeting for and the previous content. Today is ${new Date().toUTCString()}`,
   )
   return introduction ?? ''
 }
@@ -29,7 +29,7 @@ export async function outro(intro: string, content: string[]): Promise<string> {
   const introduction = await gpt3(
     `${intro} ${content.join(
       '\n',
-    )} \n\n You are the news reporter and the previous content is your today's topic, you have to write a short ending to the story (10-20 words).`,
+    )} \n\n ${context} The previous content is your today's topic, you have to write a short ending to the story (10-20 words).`,
   )
   return introduction ?? ''
 }

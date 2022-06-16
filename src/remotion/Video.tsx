@@ -10,6 +10,7 @@ import { Tweet } from 'src/twitter'
 
 export const scriptFile = process.env.REMOTION_SCRIPT_FILE ?? 'test'
 export const fps = 30
+
 export const RemotionVideo: React.FC = () => {
   const [handle] = useState(() => delayRender())
   const [durations, setDurations] = useState<number[]>([])

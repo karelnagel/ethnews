@@ -29,7 +29,7 @@ export const Thread: React.FC<{
                 transitionDuration: `${(oneDuration / fps) * 1000}ms`,
               }}
             >
-              <Img src={tweet.image} className="rounded-full basis-1 h-16" />
+              <Img src={tweet.image} className="rounded-full h-16" />
               <div className="text-lg">
                 <div className="flex space-x-3 text-xl">
                   <p className="font-bold  text-xl">{tweet.name}</p>

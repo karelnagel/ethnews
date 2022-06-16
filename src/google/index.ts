@@ -12,9 +12,9 @@ export async function toSpeech(text: string, output: string) {
   const [response] = await client.synthesizeSpeech({
     input: { text: text },
     // Select the language and SSML voice gender (optional)
-    voice: { languageCode: 'en-US', ssmlGender: 'NEUTRAL' },
+    voice: { languageCode: 'en-US', ssmlGender: 'FEMALE', name: 'en-US-Wavenet-F' },
     // select the type of audio encoding
-    audioConfig: { audioEncoding: 'MP3' },
+    audioConfig: { audioEncoding: 'MP3', pitch: -1.6 },
   })
   // Write the binary audio content to a local file
 

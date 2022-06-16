@@ -50,7 +50,7 @@ export const getThreads = async (query: string, count: number, start_time: strin
       while (replyTo) {
         const result = await client.tweets.findTweetById(replyTo, {
           expansions: ['author_id'],
-          'tweet.fields': ['public_metrics', 'referenced_tweets'],
+          'tweet.fields': ['public_metrics', 'referenced_tweets', 'attachments'],
           'user.fields': ['id', 'name', 'description', 'username', 'profile_image_url'],
         })
         if (result.data) {
