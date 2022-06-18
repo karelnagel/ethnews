@@ -6,6 +6,8 @@ const config = {
   searchTerm: '#ethnews from:KarelETH',
   folderPath: 'videos',
   composition: 'Video',
+  uploadDelay: 30000,
+  status: 'Todays news:',
   gpt: {
     model: 'text-curie-001', // ['text-ada-001','text-curie-001','text-babbage-001','text-davinci-002'],
     temperature: 0.7,

@@ -9,7 +9,7 @@
     "format": "prettier \"./**\" --write --ignore-unknown",
     "format:check": "prettier \"./**\" --ignore-unknown --check",
     "remotion:start": "remotion preview src/remotion/index.tsx --props=./videos/test/script.json",
-    "remotion:build": "remotion render src/remotion/index.tsx Video out/video.mp4 --props=./videos/test/script.json",
+    "remotion:build": "remotion render src/remotion/index.tsx Video videos/test/video.mp4 --props=./videos/test/script.json",
     "remotion:upgrade": "remotion upgrade"
   },
   "dependencies": {
@@ -55,9 +55,12 @@
     "ts-jest": "^27.1.4",
     "ts-node": "^10.8.1",
     "tslib": "^2.3.1",
+    "twit": "2.2.11",
     "twitter-api-sdk": "^1.0.9",
-    "twitter-api-v2": "^1.12.2",
     "typescript": "^4.7.3",
     "yarn": "^1.22.19"
+  },
+  "devDependencies": {
+    "@types/twit": "^2.2.30"
   }
 }

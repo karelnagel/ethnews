@@ -6,6 +6,7 @@ import { start } from './render.js'
 import { writeJson } from './file/index.js'
 import { scriptToSpeech } from './google/index.js'
 import config from './conf.js'
+import { postTweet, postVideo } from './twitter/post.js'
 
 export default async function main() {
   const folder = new Date().toISOString()
@@ -44,6 +45,31 @@ export default async function main() {
   // Creating video with remotion
   console.log('Starting rendering...')
   const videoPath = await start(folder, folderPath)
+  if (!videoPath) {
+    console.log('Error with rendering')
+    return
+  }
   console.log(`Video created: ${videoPath}`)
+
+  // Posting video to twitter
+  console.log('Posting...')
+  const tweetId = await postVideo(config.status, videoPath)
+  if (!tweetId) {
+    console.log('Error with posting')
+    return
+  }
+  console.log(`Video posted: https://twitter.com/ethnews/status/${tweetId}`)
+
+  console.log('Adding replies...')
+  let lastTweet = tweetId
+  for await (const id of threadIds) {
+    const newTweet = await postTweet({ status: `https://twitter.com/ethnews/status/${id}`, replyTo: lastTweet })
+    if (!newTweet) {
+      console.log('Error with adding reply')
+      continue
+    }
+    lastTweet = newTweet
+  }
+  console.log('Success')
 }
 main()
