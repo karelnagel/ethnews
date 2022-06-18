@@ -1,81 +1,48 @@
 #!/usr/bin/env node
 import 'dotenv/config'
-import { introduction, outro, summarizeThread } from './openai/index.js'
-import { getThreads, Tweet } from './twitter/index.js'
+import { createScript } from './openai/index.js'
+import { getThreadIds, getThreads } from './twitter/index.js'
 import { start } from './render.js'
 import { writeJson } from './file/index.js'
-import { toSpeech } from './google/index.js'
+import { scriptToSpeech } from './google/index.js'
+import config from './conf.js'
 
-export interface Script {
-  type: 'intro' | 'thread' | 'ad' | 'outro'
-  text: string
-  position: number
-  content: {
-    type: 'thread' | 'intro' | 'url' | 'outro'
-    data: string | Tweet[] | null
-  }
-}
 export default async function main() {
   const folder = new Date().toISOString()
-  const folderPath = `src/remotion/videos/${folder}`
+  const folderPath = `${config.folderPath}/${folder}`
   const yesterday = new Date()
-  yesterday.setDate(yesterday.getDate() - 1)
+  yesterday.setDate(yesterday.getDate() - config.lastDays)
+  console.log(`Starting with ${folder}`)
 
-  // Getting threads from yesterday
-  const threads = await getThreads('#ethnews from:KarelETH', 3, yesterday.toISOString())
-  if (!threads) {
-    console.log('No threads found')
+  // Getting thread ids
+  const threadIds = await getThreadIds(config.searchTerm, config.threadsCount, yesterday.toISOString())
+  if (!threadIds || threadIds.length === 0) {
+    console.log('Error with getting thread ids')
     return
   }
+  console.log(`Got these thread ids: ${threadIds}`)
 
-  // Summarizing threads
-  const summaries: string[] = []
-  for await (const thread of threads) {
-    const response = await summarizeThread(thread)
-    summaries.push(response)
+  // Getting threads
+  const threads = await getThreads(threadIds)
+  if (!threads || threads.length === 0) {
+    console.log('Error with getting threads')
+    return
   }
-  const intro = await introduction(summaries)
-  const out = await outro(intro, summaries)
+  console.log(`Got the tweets for ${threads.length} threads`)
 
-  const script: Script[] = []
-  script.push({
-    type: 'intro',
-    text: intro,
-    position: 0,
-    content: {
-      type: 'intro',
-      data: null,
-    },
-  })
+  // Creating script
+  const script = await createScript(threads)
+  console.log('Script ready')
 
-  threads.forEach((thread, index) => {
-    script.push({
-      type: 'thread',
-      text: summaries[index],
-      position: index + 1,
-      content: {
-        type: 'thread',
-        data: thread,
-      },
-    })
-  })
-  script.push({
-    type: 'outro',
-    text: out,
-    position: threads.length + 1,
-    content: {
-      type: 'outro',
-      data: null,
-    },
-  })
+  // Writing script to file
   const scriptPath = await writeJson(script, folderPath)
   console.log(`Script written to ${scriptPath}`)
 
-  for await (const scriptItem of script) {
-    await toSpeech(scriptItem.text, `${folderPath}/${scriptItem.position}.mp3`)
-  }
+  // Getting audio files
+  await scriptToSpeech(script, folderPath)
+
   // Creating video with remotion
-  // const scriptPath = `videos/2022-06-15/script.json`
+  console.log('Starting rendering...')
   const videoPath = await start(folder, folderPath)
   console.log(`Video created: ${videoPath}`)
 }

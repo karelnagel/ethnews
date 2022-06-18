@@ -1,27 +1,28 @@
-// Imports the Google Cloud client library
 import textToSpeech from '@google-cloud/text-to-speech'
-
-// Import other required libraries
 import fs from 'fs'
+import { Script } from 'src/interfaces'
 import util from 'util'
-// Creates a client
+import config from './../conf.js'
+
 const client = new textToSpeech.TextToSpeechClient()
 
+export async function scriptToSpeech(script: Script[], folderPath: string) {
+  for await (const scriptElement of script) {
+    await toSpeech(scriptElement.text, `${folderPath}/${scriptElement.position}.mp3`)
+  }
+}
+
 export async function toSpeech(text: string, output: string) {
-  // Performs the text-to-speech request
   const [response] = await client.synthesizeSpeech({
     input: { text: text },
-    // Select the language and SSML voice gender (optional)
-    voice: { languageCode: 'en-US', ssmlGender: 'FEMALE', name: 'en-US-Wavenet-F' },
-    // select the type of audio encoding
-    audioConfig: { audioEncoding: 'MP3', pitch: -1.6 },
+    voice: { languageCode: config.tts.lang, ssmlGender: 'FEMALE', name: config.tts.name },
+    audioConfig: { audioEncoding: 'MP3', pitch: config.tts.pitch, speakingRate: config.tts.speakingRate },
   })
-  // Write the binary audio content to a local file
 
   if (response.audioContent) {
     const writeFile = util.promisify(fs.writeFile)
     await writeFile(output, response.audioContent, 'binary')
-    console.log('Audio content written to file: output.mp3')
+    console.log(`Audio content written to file: ${output}`)
   } else {
     console.log('eror')
   }
