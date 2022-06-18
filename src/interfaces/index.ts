@@ -18,3 +18,7 @@ export interface Script {
     data: string | Tweet[] | null
   }
 }
+export interface ScriptJson {
+  script: Script[]
+  folder: string
+}

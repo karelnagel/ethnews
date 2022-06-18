@@ -1,6 +1,6 @@
 import React from 'react'
 import { AbsoluteFill, Img, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion'
-import { fps } from '../Video'
+import { fps } from '../Root'
 import image from './../images/intro.jpeg'
 
 export const Intro: React.FC = () => {

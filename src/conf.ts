@@ -4,8 +4,8 @@ const config = {
   lastDays: 1,
   threadsCount: 3,
   searchTerm: '#ethnews from:KarelETH',
-  folderPath: 'src/remotion/videos',
-  composition: 'Root',
+  folderPath: 'videos',
+  composition: 'Video',
   gpt: {
     model: 'text-curie-001', // ['text-ada-001','text-curie-001','text-babbage-001','text-davinci-002'],
     temperature: 0.7,

@@ -35,7 +35,7 @@ export default async function main() {
   console.log('Script ready')
 
   // Writing script to file
-  const scriptPath = await writeJson(script, folderPath)
+  const scriptPath = await writeJson({ folder, script }, folderPath)
   console.log(`Script written to ${scriptPath}`)
 
   // Getting audio files

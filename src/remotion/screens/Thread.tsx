@@ -1,7 +1,7 @@
 import React from 'react'
-import { AbsoluteFill, Img, interpolate, useCurrentFrame, useVideoConfig } from 'remotion'
-import { Tweet } from 'src/twitter'
-import { fps } from '../Video'
+import { AbsoluteFill, Img, useCurrentFrame, useVideoConfig } from 'remotion'
+import { Tweet } from 'src/interfaces'
+import { fps } from '../Root'
 
 export const Thread: React.FC<{
   thread: Tweet[]

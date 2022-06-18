@@ -1,12 +1,12 @@
 import { exec } from 'child_process'
 import config from './conf.js'
 
-export const start = async (file: string, folder: string): Promise<string> => {
-  const filePath = `${folder}/video.mp4`
+export const start = async (folder: string, folderPath: string): Promise<string> => {
+  const filePath = `${folderPath}/video.mp4`
 
   return new Promise((resolve, reject) => {
     exec(
-      `REMOTION_SCRIPT_FILE=${file} npx remotion render src/remotion/index.tsx ${config.composition} ${filePath}`,
+      `npx remotion render src/remotion/index.tsx ${config.composition} ${filePath}  --props=./videos/${folder}/script.json`,
       async function (err, stdout, stderr) {
         console.log(stdout)
         console.log(stderr)

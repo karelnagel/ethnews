@@ -8,8 +8,8 @@
     "lint": "eslint --ext .ts,.js .",
     "format": "prettier \"./**\" --write --ignore-unknown",
     "format:check": "prettier \"./**\" --ignore-unknown --check",
-    "remotion:start": "remotion preview src/remotion/index.tsx",
-    "remotion:build": "remotion render src/remotion/index.tsx Root out/video.mp4",
+    "remotion:start": "remotion preview src/remotion/index.tsx --props=./videos/test/script.json",
+    "remotion:build": "remotion render src/remotion/index.tsx Video out/video.mp4 --props=./videos/test/script.json",
     "remotion:upgrade": "remotion upgrade"
   },
   "dependencies": {
