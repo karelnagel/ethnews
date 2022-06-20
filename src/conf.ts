@@ -2,14 +2,14 @@
 
 const config = {
   lastDays: 1,
-  threadsCount: 3,
-  searchTerm: '#ethnews from:KarelETH',
+  threadsCount: 4,
+  searchTerm: '(@TheDailyETH) -from:TheDailyETH',
   folderPath: 'videos',
   composition: 'Video',
   uploadDelay: 30000,
   status: 'Todays news:',
   gpt: {
-    model: 'text-curie-001', // ['text-ada-001','text-curie-001','text-babbage-001','text-davinci-002'],
+    model: 'text-davinci-002', // ['text-ada-001','text-curie-001','text-babbage-001','text-davinci-002'],
     temperature: 0.7,
     max_tokens: 256,
     top_p: 1,
@@ -18,9 +18,10 @@ const config = {
   },
   tts: {
     lang: 'en-US',
-    name: 'en-US-Wavenet-F',
-    pitch: -1.6,
+    name: 'en-US-Wavenet-D',
+    pitch: 0,
     speakingRate: 1,
+    gender: 'MALE',
   },
 }
 export default config

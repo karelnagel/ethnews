@@ -6,9 +6,10 @@ import './style.css'
 import { Intro } from './screens/Intro'
 import { Thread } from './screens/Thread'
 import { ScriptJson, Tweet } from 'src/interfaces'
+import { LogoScreen } from './screens/LogoScreen'
 
 export const fps = 30
-
+export const logoDuration = fps * 4
 const { script, folder } = getInputProps() as ScriptJson
 
 export const Root: React.FC = () => {
@@ -30,7 +31,7 @@ export const Root: React.FC = () => {
       }
       setAudioFiles(audios)
       setDurations(durs)
-      setTotalDuration(durs.reduce((a, b) => a + b, 0))
+      setTotalDuration(durs.reduce((a, b) => a + b, 0) + logoDuration)
       continueRender(handle)
     }
     effect()
@@ -50,32 +51,52 @@ export const Root: React.FC = () => {
           audioFiles: audioFiles,
         }}
       />
-      <Composition id={`Intro`} component={Intro} durationInFrames={120} fps={fps} width={1920} height={1080} />
       <Composition
-        id={`Thread1`}
-        component={Thread}
-        durationInFrames={100}
+        id={`Intro`}
+        component={Intro}
+        durationInFrames={4 * fps}
         fps={fps}
         width={1920}
         height={1080}
         defaultProps={{
-          thread: script[1].content.data as Tweet[],
+          audio: audioFiles[0],
         }}
       />
-      )
+      <Composition
+        id={`Thread1`}
+        component={Thread}
+        durationInFrames={4 * fps}
+        fps={fps}
+        width={1920}
+        height={1080}
+        defaultProps={{
+          thread: script[1].content.thread as Tweet[],
+          audio: audioFiles[1],
+        }}
+      />
+
       {script && (
         <Composition
           id={`Thread2`}
           component={Thread}
-          durationInFrames={1000}
+          durationInFrames={15 * fps}
           fps={fps}
           width={1920}
           height={1080}
           defaultProps={{
-            thread: script[2].content.data as Tweet[],
+            thread: script[2].content.thread as Tweet[],
+            audio: audioFiles[2],
           }}
         />
       )}
+      <Composition
+        id={`Logo`}
+        component={LogoScreen}
+        durationInFrames={logoDuration}
+        fps={fps}
+        width={1920}
+        height={1080}
+      />
     </>
   )
 }

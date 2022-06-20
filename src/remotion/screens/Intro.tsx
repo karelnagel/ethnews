@@ -1,30 +1,51 @@
 import React from 'react'
-import { AbsoluteFill, Img, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion'
+import {
+  AbsoluteFill,
+  useCurrentFrame,
+  useVideoConfig,
+  Audio,
+  getInputProps,
+  Sequence,
+  interpolate,
+  Easing,
+} from 'remotion'
+import { ScriptJson, Tweet } from 'src/interfaces'
 import { fps } from '../Root'
-import image from './../images/intro.jpeg'
+import { TweetObj } from './Tweet'
 
-export const Intro: React.FC = () => {
-  const frame = useCurrentFrame()
-  const scale = spring({
-    fps,
-    frame,
-    config: {
-      mass: 10,
-    },
-  })
-  const { height, width } = useVideoConfig()
-  const opacity = interpolate(frame, [20, 40], [0, 1])
+const { script } = getInputProps() as ScriptJson
+
+export const Intro: React.FC<{ audio: string }> = ({ audio }) => {
+  const threads = script.filter(s => s.content.thread).map(s => s.content.thread) as Tweet[][]
+  const { durationInFrames } = useVideoConfig()
+  const duration = Math.floor(durationInFrames / threads.length)
   return (
-    <AbsoluteFill className="flex flex-col justify-center items-center space-y-16">
-      <AbsoluteFill>
-        <Img src={image} height={height} width={width} />
+    <>
+      <AbsoluteFill className="  bg-white w-full h-full">
+        <h1 className="text-9xl font-bold text-primary z-20 relative my-6 text-center">Todays news:</h1>
+        <div className="">
+          {threads.map((thread, i) => {
+            return (
+              <Sequence from={duration * i} durationInFrames={duration} layout="none">
+                <Thread thread={thread} />
+              </Sequence>
+            )
+          })}
+        </div>
       </AbsoluteFill>
-      <h1 className="text-9xl font-bold  text-primary" style={{ transform: `scale(${scale})` }}>
-        ETH News
-      </h1>
-      <h3 className="text-4xl font-bold  z-20" style={{ opacity }}>
-        The most important tweets in Ethereum today
-      </h3>
-    </AbsoluteFill>
+      {audio && <Audio src={audio} />}
+    </>
+  )
+}
+
+export const Thread: React.FC<{ thread: Tweet[] }> = ({ thread }) => {
+  const frame = useCurrentFrame()
+  const opacity = interpolate(frame, [0, fps], [0, 1], { easing: Easing.ease })
+  return (
+    <div style={{ opacity }} className="flex flex-col space-y-4 max-w-screen-md mx-auto">
+      {thread.map((tweet, i) => (
+        <TweetObj tweet={tweet} key={i} />
+      ))}
+    </div>
   )
 }

@@ -9,17 +9,23 @@ const openai = new OpenAIApi(
   }),
 )
 
-const mainContext = 'You are the news reporter for EthNews, which is a news outlet for Ethereum news.'
+const mainContext = 'You are the news reporter for The Daily ETH, which is a news outlet for Ethereum news.'
 
-export async function createScript(threads: Tweet[][]): Promise<Script[]> {
+export async function createScript(threads: Tweet[][]): Promise<{ script: Script[]; title: string }> {
   const summaries = await summarizeThreads(threads)
   console.log('Threads summarized')
 
-  const intro = await introduction(summaries)
-  console.log('Intro created')
+  // const intro = await introduction(summaries)
+  // console.log('Intro created')
+  const names: string[] = []
+  new Set(threads.flat(2).map(t => t.name)).forEach(n => names.push(n))
+  const intro = `Welcome back to The Daily ETH, today we have tweets from ${names
+    .slice(0, names.length - 1)
+    .join(', ')} and ${names[names.length - 1]}.`
 
-  const out = await outro(intro, summaries)
-  console.log('Outro created')
+  // const title = await getTitle(intro, summaries)
+  // console.log('Outro created')
+  const title = config.status
 
   const script: Script[] = []
   script.push({
@@ -28,7 +34,7 @@ export async function createScript(threads: Tweet[][]): Promise<Script[]> {
     position: 0,
     content: {
       type: 'intro',
-      data: null,
+      thread: null,
     },
   })
 
@@ -39,24 +45,24 @@ export async function createScript(threads: Tweet[][]): Promise<Script[]> {
       position: index + 1,
       content: {
         type: 'thread',
-        data: thread,
+        thread: thread,
       },
     })
   })
   script.push({
     type: 'outro',
-    text: out,
+    text: "That's it for today, come back tomorrow for the latest Ethereum news!",
     position: threads.length + 1,
     content: {
       type: 'outro',
-      data: null,
+      thread: null,
     },
   })
-  return script
+  return { script, title }
 }
 export async function summarizeThreads(threads: Tweet[][]): Promise<string[]> {
   const summaries: string[] = []
-  const context = `${mainContext} You have to summarize the previous Twitter thread for a video transcript.`
+  const context = `${mainContext}  You have to write short summary about the previous Twitter thread for a video transcript.`
   for await (const thread of threads) {
     const formattedThread = thread
       .map(tweet => `${tweet.name} (${tweet.username}): ${tweet.text.replace('\n', ' ')}`)
@@ -67,13 +73,13 @@ export async function summarizeThreads(threads: Tweet[][]): Promise<string[]> {
 }
 
 export async function introduction(content: string[]): Promise<string> {
-  const context = `${mainContext} You have to write short(10-20 words) greeting for and the previous content. Today is ${new Date().toUTCString()}`
+  const context = `${mainContext}  Today is ${new Date().toUTCString()} and you have to write short, 2 sentences long, introduction for the previous content.`
   const introduction = await gpt3(`${content.join('\n')} \n\n ${context} `)
   return introduction
 }
 
-export async function outro(intro: string, content: string[]): Promise<string> {
-  const context = `${mainContext} The previous content is your today's topic, you have to write a short ending to the story (10-20 words).`
+export async function getTitle(intro: string, content: string[]): Promise<string> {
+  const context = `${mainContext}  You have to write 1 sentence long title for the previous content.`
   const introduction = await gpt3(`${intro} \n ${content.join('\n')} \n\n ${context}`)
   return introduction
 }

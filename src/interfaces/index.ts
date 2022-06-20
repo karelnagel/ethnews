@@ -15,10 +15,11 @@ export interface Script {
   position: number
   content: {
     type: 'thread' | 'intro' | 'url' | 'outro'
-    data: string | Tweet[] | null
+    thread: Tweet[] | null
   }
 }
 export interface ScriptJson {
   script: Script[]
   folder: string
+  title: string
 }

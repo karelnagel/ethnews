@@ -15,7 +15,11 @@ export async function scriptToSpeech(script: Script[], folderPath: string) {
 export async function toSpeech(text: string, output: string) {
   const [response] = await client.synthesizeSpeech({
     input: { text: text },
-    voice: { languageCode: config.tts.lang, ssmlGender: 'FEMALE', name: config.tts.name },
+    voice: {
+      languageCode: config.tts.lang,
+      ssmlGender: config.tts.gender === 'MALE' ? 'MALE' : 'FEMALE',
+      name: config.tts.name,
+    },
     audioConfig: { audioEncoding: 'MP3', pitch: config.tts.pitch, speakingRate: config.tts.speakingRate },
   })
 

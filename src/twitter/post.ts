@@ -47,11 +47,12 @@ export async function postTweet({
 export async function uploadMedia(filePath: string): Promise<string | null> {
   return new Promise(resolve => {
     T.postMediaChunked({ file_path: filePath }, function (err, data) {
-      const mediaId = (data as { media_id_string: string }).media_id_string
+      console.log(data)
       if (err) {
         console.log(err)
         resolve(null)
       } else {
+        const mediaId = (data as { media_id_string: string }).media_id_string
         resolve(mediaId)
       }
     })

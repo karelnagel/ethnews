@@ -32,11 +32,11 @@ export default async function main() {
   console.log(`Got the tweets for ${threads.length} threads`)
 
   // Creating script
-  const script = await createScript(threads)
+  const { script, title } = await createScript(threads)
   console.log('Script ready')
 
   // Writing script to file
-  const scriptPath = await writeJson({ folder, script }, folderPath)
+  const scriptPath = await writeJson({ folder, script, title }, folderPath)
   console.log(`Script written to ${scriptPath}`)
 
   // Getting audio files
@@ -53,7 +53,7 @@ export default async function main() {
 
   // Posting video to twitter
   console.log('Posting...')
-  const tweetId = await postVideo(config.status, videoPath)
+  const tweetId = await postVideo(title.replace('\n', ''), videoPath)
   if (!tweetId) {
     console.log('Error with posting')
     return

@@ -1,6 +1,7 @@
 import fs from 'fs'
+import { ScriptJson } from 'src/interfaces'
 
-export async function writeJson(object: unknown, folder: string): Promise<string> {
+export async function writeJson(object: ScriptJson, folder: string): Promise<string> {
   const fileName = `${folder}/script.json`
   await makeDirectory(folder)
 
